@@ -1,4 +1,5 @@
 // src/App.js
+// eslint-disable-next-line 
 import styled, { ThemeProvider } from "styled-components";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lightTheme } from "./utils/Themes";
