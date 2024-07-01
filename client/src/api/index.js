@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://instafood-dxil.onrender.com/api",
+  baseURL: "https://insta-food-backend.vercel.app/api",
 });
 
 //auth
