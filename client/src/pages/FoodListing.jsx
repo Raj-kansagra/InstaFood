@@ -143,6 +143,20 @@ const FoodListing = ({setOpenAuth}) => {
     setPriceRange([minPrice, maxPrice]);
   };
 
+  const handleMax = (e) => {
+    const value = e.target.value;
+    const parsedValue = value ? parseInt(value, 10) : '';
+    const formattedValue = isNaN(parsedValue) || parsedValue < 0 ? 0 : parsedValue;
+    setMaxPrice(formattedValue);
+  };
+
+  const handleMin = (e) => {
+    const value = e.target.value;
+    const parsedValue = value ? parseInt(value, 10) : '';
+    const formattedValue = isNaN(parsedValue) || parsedValue < 0 ? 0 : parsedValue;
+    setMinPrice(formattedValue);
+  };
+
   return (
     <Container>
       <Filters>
@@ -157,7 +171,7 @@ const FoodListing = ({setOpenAuth}) => {
                     <StyledInput
                       type="number"
                       value={minPrice}
-                      onChange={(e) => setMinPrice(Math.max(0,Number(e.target.value)))}
+                      onChange={handleMin}
                     />
                   </div>
                   <div>
@@ -165,7 +179,7 @@ const FoodListing = ({setOpenAuth}) => {
                     <StyledInput
                       type="number"
                       value={maxPrice}
-                      onChange={(e) => setMaxPrice(Math.max(0,Number(e.target.value)))}
+                      onChange={handleMax}
                     />
                   </div>
                   <Button text="Save" small  onClick={handleSavePriceRange}/>

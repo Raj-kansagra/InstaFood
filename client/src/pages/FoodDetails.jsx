@@ -208,6 +208,10 @@ const FoodDetails = ({setOpenAuth}) => {
     checkFavorite();
   }, []);
 
+  const addorder = async () => {
+    addCart();
+    navigate("/cart");
+  }
   const addCart = async () => {
     const token = localStorage.getItem("app-token");
     if(!token){
@@ -259,7 +263,7 @@ const FoodDetails = ({setOpenAuth}) => {
                 outlined
                 onClick={() => addCart()}
               />
-              <Button text="Order Now" full />
+              <Button text="Order" full onClick={() => addorder()}/>
               <Button
                 leftIcon={
                   favorite ? (
