@@ -17,8 +17,7 @@ import {
 import { toast } from "react-toastify";
 
 const Container = styled.div`
-  padding: 20px 30px;
-  padding-bottom: 200px;
+  padding: 100px 30px;
   height: 100%;
   overflow-y: scroll;
   display: flex;
@@ -62,11 +61,13 @@ const Image = styled.img`
 `;
 
 const Details = styled.div`
-  flex: 1;
+  width:40%;
   display: flex;
   gap: 18px;
   flex-direction: column;
-  padding: 4px 10px;
+  @media screen and (max-width: 700px) {
+    width:100%;
+  } 
 `;
 const Title = styled.div`
   font-size: 28px;
@@ -126,9 +127,11 @@ const Item = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   gap: 16px;
+  width:80%;
   padding: 32px 0px;
   @media only screen and (max-width: 700px) {
     gap: 12px;
+    width:100%;
     padding: 12px 0px;
   }
 `;
@@ -247,10 +250,11 @@ const FoodDetails = ({setOpenAuth}) => {
               <Button
                 text="Add to Cart"
                 full
+                small
                 outlined
                 onClick={() => addCart()}
               />
-              <Button text="Order" full onClick={() => addorder()}/>
+              <Button text="Order" small full onClick={() => addorder()}/>
               <Button
                 leftIcon={
                   favorite ? (
@@ -260,6 +264,7 @@ const FoodDetails = ({setOpenAuth}) => {
                   )
                 }
                 full
+                small
                 outlined
                 onClick={() => (favorite ? removeFavourite() : addFavourite())}
               />

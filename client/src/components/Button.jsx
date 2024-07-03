@@ -52,7 +52,8 @@ ${({ flex }) =>
 ${({ small }) =>
     small &&
     `
-padding: 10px 28px;
+font-size: 14px;
+padding: 10px 10px;
 `}
   ${({ outlined, theme }) =>
     outlined &&
