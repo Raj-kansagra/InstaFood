@@ -4,6 +4,10 @@ const API = axios.create({
   baseURL: "https://insta-food-backend.vercel.app/api",
 });
 
+// const API = axios.create({
+//   baseURL: "http://localhost:8080/api",
+// });
+
 //auth
 export const getUser = async (token) =>
   await API.get(`/user/`, {

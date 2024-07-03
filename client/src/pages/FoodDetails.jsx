@@ -13,8 +13,7 @@ import {
   deleteFromFavourite,
   getFavourite,
   getProductDetails,
-} from "../api";
-import { useDispatch } from "react-redux";
+} from "../api";  
 import { toast } from "react-toastify";
 
 const Container = styled.div`
@@ -138,7 +137,6 @@ const FoodDetails = ({setOpenAuth}) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [favorite, setFavorite] = useState(false);
-  const [favoriteLoading, setFavoriteLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState();
 
@@ -151,7 +149,6 @@ const FoodDetails = ({setOpenAuth}) => {
   };
 
   const removeFavourite = async () => {
-    setFavoriteLoading(true);
     const token = localStorage.getItem("app-token");
     if(!token){
       setOpenAuth(true);
@@ -160,10 +157,8 @@ const FoodDetails = ({setOpenAuth}) => {
     await deleteFromFavourite(token, { productId: id })
       .then((res) => {
         setFavorite(false);
-        setFavoriteLoading(false);
       })
       .catch((err) => {
-        setFavoriteLoading(false);
         console.log(err);
       });
   };
@@ -173,32 +168,24 @@ const FoodDetails = ({setOpenAuth}) => {
     if(!token){
       setOpenAuth(true);
       return;
-    } 
-    setFavoriteLoading(true);
+    }
     await addToFavourite(token, { productId: id })
       .then((res) => {
         setFavorite(true);
-        setFavoriteLoading(false);
       })
       .catch((err) => {
-        setFavoriteLoading(false);
         console.log(err);
       });
   };
 
   const checkFavorite = async () => {
-    setFavoriteLoading(true);
     const token = localStorage.getItem("app-token");
     await getFavourite(token, { productId: id })
       .then((res) => {
         const isFavorite = res.data?.some((favorite) => favorite._id === id);
-
         setFavorite(isFavorite);
-
-        setFavoriteLoading(false);
       })
       .catch((err) => {
-        setFavoriteLoading(false);
         console.log(err);
       });
   };
@@ -219,7 +206,7 @@ const FoodDetails = ({setOpenAuth}) => {
       return;
     } 
     await addToCart(token, { productId: id, quantity: 1 })
-      .then((res) => {
+      .then(() => {
         toast.success("Added to Cart");
       })
       .catch((err) => {
@@ -274,7 +261,6 @@ const FoodDetails = ({setOpenAuth}) => {
                 }
                 full
                 outlined
-                isLoading={favoriteLoading}
                 onClick={() => (favorite ? removeFavourite() : addFavourite())}
               />
             </ButtonWrapper>

@@ -216,7 +216,7 @@ const FoodListing = ({setOpenAuth}) => {
           ) : (
             <>
               {products.map((product) => (
-                <ProductCard setOpenAuth={setOpenAuth} key={product._id} product={product} />
+                <ProductCard key={product._id} product={product} />
               ))}
             </>
           )}

@@ -85,7 +85,7 @@ const Home = ({setOpenAuth}) => {
         ) : (
           <CardWrapper>
             {products.map((product) => (
-              <ProductsCard setOpenAuth={setOpenAuth} product={product} />
+              <ProductsCard product={product} />
             ))}
           </CardWrapper>
         )}

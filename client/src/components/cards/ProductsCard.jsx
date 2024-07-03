@@ -1,19 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import { CircularProgress} from "@mui/material";
-import {
-  FavoriteBorder,
-  FavoriteRounded,
-  ShoppingBagOutlined,
-} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import {
-  addToFavourite,
-  deleteFromFavourite,
-  getFavourite,
-  addToCart,
-} from "../../api";
-import { toast } from "react-toastify";
+
 
 const Card = styled.div`
   width: 300px;
@@ -132,102 +120,12 @@ const Span = styled.div`
   text-decoration-color: ${({ theme }) => theme.text_secondary + 50};
 `;
 
-const ProductsCard = ({ product,setOpenAuth }) => {
+const ProductsCard = ({product}) => {
   const navigate = useNavigate();
-  const [favorite, setFavorite] = useState(false);
-
-  const addFavourite = async () => {
-    
-    const token = localStorage.getItem("app-token");
-    if(!token){
-      setOpenAuth(true);
-      return;
-    } 
-    await addToFavourite(token, { productId: product?._id })
-      .then((res) => {
-        setFavorite(true);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const removeFavourite = async () => {
-    const token = localStorage.getItem("app-token");
-    if(!token){
-      setOpenAuth(true);
-      return;
-    } 
-    await deleteFromFavourite(token, { productId: product?._id })
-      .then((res) => {
-        setFavorite(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const checkFavorite = async () => {
-    const token = localStorage.getItem("app-token");
-    if(!token) return;
-    await getFavourite(token, { productId: product?._id })
-      .then((res) => {
-        const isFavorite = res.data?.some(
-          (favorite) => favorite._id === product?._id
-        );
-
-        setFavorite(isFavorite);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const addCart = async (id) => {
-    
-    const token = localStorage.getItem("app-token");
-    if(!token){
-      setOpenAuth(true);
-      return;
-    } 
-    await addToCart(token, { productId: id, quantity: 1 })
-      .then(()=>{
-        toast.success("Added to Cart");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  useEffect(() => {
-    checkFavorite();
-  }, [favorite]);
   return (
     <Card>
       <Top>
         <Image src={product?.img} onClick={() => navigate(`/dishes/${product._id}`)}/>
-        <Menu>
-          <MenuItem
-            onClick={() => (favorite ? removeFavourite() : addFavourite())}
-          >
-            {false ? (
-              <>
-                <CircularProgress sx={{ fontSize: "20px" }} />
-              </>
-            ) : (
-              <>
-                {favorite ? (
-                  <FavoriteRounded sx={{ fontSize: "20px", color: "red" }} />
-                ) : (
-                  <FavoriteBorder sx={{ fontSize: "20px" }} />
-                )}
-              </>
-            )}
-          </MenuItem>
-          <MenuItem onClick={() => addCart(product?._id)}>
-            <ShoppingBagOutlined sx={{ fontSize: "20px" }} />
-          </MenuItem>
-        </Menu>
       </Top>
 
       <Details onClick={() => navigate(`/dishes/${product._id}`)}>
@@ -237,6 +135,7 @@ const ProductsCard = ({ product,setOpenAuth }) => {
           ${product?.price?.org} <Span>${product?.price?.mrp}</Span>
           <Percent> (${product?.price?.off}% Off) </Percent>
         </Price>
+
       </Details>
     </Card>
   );

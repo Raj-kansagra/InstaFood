@@ -39,17 +39,15 @@ function App() {
     <ThemeProvider theme={lightTheme}>
       <BrowserRouter>
         <Container>
-          <Navbar
-            setOpenAuth={setOpenAuth}
-          />
+          <Navbar setOpenAuth={setOpenAuth}/>
           <Routes>
-            <Route path="/" exact element={<Home setOpenAuth={setOpenAuth}/>} />
-            {currentUser && (<Route path="/favorite" exact element={<Favourites setOpenAuth={setOpenAuth}/>} />)}
-            {currentUser && (<Route path="/cart" exact element={<Cart setOpenAuth={setOpenAuth}/>} />)}
-            {currentUser && (<Route path="/orders" exact element={<Orders setOpenAuth={setOpenAuth}/>} />)}
+            <Route path="/" exact element={<Home/>} />
+            {currentUser && (<Route path="/favorite" exact element={<Favourites/>} />)}
+            {currentUser && (<Route path="/cart" exact element={<Cart/>} />)}
+            {currentUser && (<Route path="/orders" exact element={<Orders/>} />)}
             <Route path="/dishes/:id" exact element={<FoodDetails setOpenAuth={setOpenAuth}/>} />
-            <Route path="/dishes" exact element={<FoodListing setOpenAuth={setOpenAuth}/>} />
-            <Route path="*" element={<Home setOpenAuth={setOpenAuth}/>} />
+            <Route path="/dishes" exact element={<FoodListing/>} />
+            <Route path="*" element={<Home/>} />
           </Routes>
           {openAuth && (
             <Authentication setOpenAuth={setOpenAuth} openAuth={openAuth} />

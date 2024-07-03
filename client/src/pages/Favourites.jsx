@@ -69,7 +69,7 @@ const Favourites = ({setOpenAuth}) => {
           ) : (
             <>
               {products.map((product) => (
-                <ProductsCard setOpenAuth={setOpenAuth} product={product} />
+                <ProductsCard product={product} />
               ))}
             </>
           )}
