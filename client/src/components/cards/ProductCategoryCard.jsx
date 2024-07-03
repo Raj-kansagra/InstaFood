@@ -1,7 +1,6 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-
+import { useNavigate } from "react-router-dom";
 const Card = styled.div`
   width: 250px;
   display: flex;
@@ -9,6 +8,7 @@ const Card = styled.div`
   gap: 16px;
   transition: all 0.3s ease-out;
   cursor: pointer;
+
   @media (max-width: 600px) {
     width: 170px;
   }
@@ -57,7 +57,6 @@ const Button = styled.div`
   border-radius: 12px;
   text-align: center;
   font-weight: 500;
-  z-index: 0;
   background: linear-gradient(
     to top,
     ${({ theme }) => theme.black} 30%,
@@ -67,7 +66,22 @@ const Button = styled.div`
     padding: 6px 14px;
   }
 `;
-
+const Sale = styled.div`
+  position: absolute;
+  z-index: 10;
+  color: ${({ theme }) => theme.text_primary};
+  top: 10px;
+  right: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  background: green;
+  padding: 3px 6px;
+  border-radius: 4px;
+  @media (max-width: 600px) {
+    font-size: 10px;
+  }
+`;
 
 const ProductCategoryCard = ({ category }) => {
   const navigate = useNavigate();
@@ -78,6 +92,7 @@ const ProductCategoryCard = ({ category }) => {
         <Menu>
           <Button>{category.name}</Button>
         </Menu>
+        <Sale>{category.off}</Sale>
       </Top>
     </Card>
   );

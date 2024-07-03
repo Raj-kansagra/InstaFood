@@ -168,7 +168,7 @@ export const placeOrder = async (req, res, next) => {
 
     await order.save();
     user.cart = [];
-    user.orders.push(order._id);
+    user.orders.unshift(order._id);
     await user.save();
     return res
       .status(200)

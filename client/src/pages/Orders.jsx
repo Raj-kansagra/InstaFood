@@ -19,7 +19,7 @@ const Container = styled.div`
 const Section = styled.div`
   width: 100%;
   max-width: 1400px;
-  padding: 32px 16px;
+  padding: 32px 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -73,17 +73,18 @@ const Tr = styled.tr`
 const Td = styled.td`
   padding: 12px;
   border: 1px solid #ddd;
+
+  ${({ overflow }) =>
+    overflow &&`
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    `}
+
   @media (max-width: 768px) {
     padding: 8px;
-  }
-`;
-
-const NoOrders = styled.div`
-  font-size: 18px;
-  color: ${({ theme }) => theme.text || "#333"};
-  margin-top: 20px;
-  @media (max-width: 768px) {
-    font-size: 16px;
+    max-width: 100px;
+    font-size: 12px;
   }
 `;
 
@@ -113,15 +114,16 @@ const Orders = ({setOpenAuth}) => {
   return (
     <Container>
       <Section>
-        <Title>Orders</Title>
         {orders.length === 0 ? (
-          <NoOrders>No Orders</NoOrders>
+          <Title>No Orders</Title>
         ) : (
+          <>
+          <Title>Your Orders</Title>
           <Table>
             <Thead>
               <Tr>
                 <Th>Order Id</Th>
-                <Th>Total Amount</Th>
+                <Th>Total</Th>
                 <Th>Date</Th>
                 <Th>Time</Th>
                 <Th>Status</Th>
@@ -130,7 +132,7 @@ const Orders = ({setOpenAuth}) => {
             <Tbody>
               {orders.map(order => (
                 <Tr key={order._id}>
-                  <Td>{order._id}</Td>
+                  <Td overflow>{order._id}</Td>
                   <Td>${order.total_amount}</Td>
                   <Td>{new Date(order.createdAt).toLocaleDateString()}</Td>
                   <Td>{new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Td>
@@ -139,6 +141,7 @@ const Orders = ({setOpenAuth}) => {
               ))}
             </Tbody>
           </Table>
+          </>
         )}
       </Section>
     </Container>

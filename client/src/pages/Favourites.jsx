@@ -42,7 +42,7 @@ const CardWrapper = styled.div`
     padding: 0px;
   }
 `;
-const Favourites = ({setOpenAuth}) => {
+const Favourites = () => {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
 

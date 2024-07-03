@@ -10,8 +10,8 @@ export const category = [
     off: "10-20% OFF",
   },
   {
-    img: "https://bonmasala.com/wp-content/uploads/2022/10/mutton-biriyani-recipe.jpeg",
-    name: "Biriyanis",
+    img: "https://www.modernfarmhouseeats.com/wp-content/uploads/2021/03/chili-lime-shrimp-ramen-2-scaled.jpg",
+    name: "Noodles",
     off: "20-40% OFF",
   },
   {
@@ -35,9 +35,6 @@ export const filter = [
       "Burger",
       "Pizza",
       "Pasta",
-      "Sushi",
-      "Tacos",
-      "Salads",
       "Sandwiches",
       "Dessert",
       "Beverages",

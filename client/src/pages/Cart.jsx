@@ -23,12 +23,15 @@ const Container = styled.div`
 const Section = styled.div`
   width: 100%;
   max-width: 1400px;
-  padding: 32px 16px;
+  padding: 32px 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
   font-size: 22px;
   gap: 28px;
+  @media (max-width: 750px) {
+    font-size: 20px;
+  }
 `;
 const Title = styled.div`
   font-size: 28px;
@@ -50,6 +53,7 @@ const Wrapper = styled.div`
 const Left = styled.div`
   flex: 2;
   display: flex;
+  overflow-x: hidden;
   flex-direction: column;
   gap: 12px;
   @media (max-width: 750px) {
@@ -113,16 +117,13 @@ const ProDesc = styled.div`
   font-weight: 40 0;
   color: ${({ theme }) => theme.text_primary};
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
-  @media (max-width: 575px) {
+  @media (max-width: 1100px) {
     display: none;
+    text-overflow: ellipsis;
   }
 `;
-const ProSize = styled.div`
-  font-size: 14px;
-  font-weight: 500;
-`;
+
 
 const Right = styled.div`
   flex: 1;
@@ -207,7 +208,10 @@ const Cart = ({setOpenAuth}) => {
         totalAmount,
       };
 
-      await placeOrder(token, orderDetails);
+      await placeOrder(token, orderDetails)
+      .then(()=>{
+        toast.success("Order placed");
+      })
       setButtonLoad(false);
       // Clear the cart and update the UI
       setReload(!reload);

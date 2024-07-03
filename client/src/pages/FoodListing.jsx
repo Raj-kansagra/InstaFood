@@ -112,7 +112,7 @@ const Selectableitem = styled.div`
   `}
 `;
 
-const FoodListing = ({setOpenAuth}) => {
+const FoodListing = () => {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 1000]); // Default price range
