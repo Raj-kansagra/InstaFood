@@ -118,6 +118,7 @@ const ProDesc = styled.div`
   color: ${({ theme }) => theme.text_primary};
   overflow: hidden;
   white-space: nowrap;
+  text-overflow: ellipsis;
   @media (max-width: 1100px) {
     display: none;
     text-overflow: ellipsis;
@@ -201,7 +202,7 @@ const Cart = ({setOpenAuth}) => {
       setOpenAuth(true);
       return;
     } 
-      const totalAmount = calculateSubtotal().toFixed(0);
+      const totalAmount = calculateSubtotal().toFixed(2);
       const orderDetails = {
         products,
         address: convertAddressToString(deliveryDetails),
@@ -324,7 +325,7 @@ const Cart = ({setOpenAuth}) => {
                       <TableItem>
                         {" "}
                         $
-                        {(item.quantity * item?.product?.price?.org).toFixed(0)}
+                        {(item.quantity * item?.product?.price?.org).toFixed(2)}
                       </TableItem>
                       <TableItem>
                         <DeleteOutline
@@ -343,7 +344,7 @@ const Cart = ({setOpenAuth}) => {
                 </Left>
                 <Right>
                   <Subtotal>
-                    Subtotal : ${calculateSubtotal().toFixed(0)}
+                    Subtotal : ${calculateSubtotal().toFixed(2)}
                   </Subtotal>
                   <Delivery>
                     Delivery Details:
