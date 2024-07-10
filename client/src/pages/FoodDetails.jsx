@@ -199,7 +199,7 @@ const FoodDetails = ({setOpenAuth}) => {
   }, []);
 
   const addorder = async () => {
-    addCart();
+    await addCart();
     navigate("/cart");
   }
   const addCart = async () => {
