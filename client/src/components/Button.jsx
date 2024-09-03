@@ -40,7 +40,7 @@ border: 1px solid ${({ theme }) => theme.secondary};
   ${({ isLoading }) =>
     isLoading &&
     `
-    opacity: 0.8;
+    opacity: 0.6;
   cursor: not-allowed;
 `}
 ${({ flex }) =>
