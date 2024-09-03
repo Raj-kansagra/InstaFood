@@ -139,6 +139,7 @@ const ButtonWrapper = styled.div`
 const FoodDetails = ({setOpenAuth}) => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [buttonLoad, setButtonLoad] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState();
@@ -152,9 +153,11 @@ const FoodDetails = ({setOpenAuth}) => {
   };
 
   const removeFavourite = async () => {
+    setButtonLoad(true);
     const token = localStorage.getItem("app-token");
     if(!token){
       setOpenAuth(true);
+      setButtonLoad(false);
       return;
     } 
     await deleteFromFavourite(token, { productId: id })
@@ -163,13 +166,16 @@ const FoodDetails = ({setOpenAuth}) => {
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      setButtonLoad(false);
   };
 
   const addFavourite = async () => {
+    setButtonLoad(true);
     const token = localStorage.getItem("app-token");
     if(!token){
       setOpenAuth(true);
+      setButtonLoad(false);
       return;
     }
     await addToFavourite(token, { productId: id })
@@ -179,6 +185,7 @@ const FoodDetails = ({setOpenAuth}) => {
       .catch((err) => {
         console.log(err);
       });
+      setButtonLoad(false);
   };
 
   const checkFavorite = async () => {
@@ -203,9 +210,11 @@ const FoodDetails = ({setOpenAuth}) => {
     navigate("/cart");
   }
   const addCart = async () => {
+    setButtonLoad(true);
     const token = localStorage.getItem("app-token");
     if(!token){
       setOpenAuth(true);
+      setButtonLoad(false);
       return;
     } 
     await addToCart(token, { productId: id, quantity: 1 })
@@ -215,6 +224,7 @@ const FoodDetails = ({setOpenAuth}) => {
       .catch((err) => {
         console.log(err);
       });
+      setButtonLoad(false);
   };
 
   return (
@@ -252,9 +262,12 @@ const FoodDetails = ({setOpenAuth}) => {
                 full
                 small
                 outlined
+                isDisabled={buttonLoad}
                 onClick={() => addCart()}
               />
-              <Button text="Order" small full onClick={() => addorder()}/>
+              <Button text="Order" 
+              isDisabled={buttonLoad}
+              small full onClick={() => addorder()}/>
               <Button
                 leftIcon={
                   favorite ? (
@@ -266,6 +279,7 @@ const FoodDetails = ({setOpenAuth}) => {
                 full
                 small
                 outlined
+                isDisabled={buttonLoad}
                 onClick={() => (favorite ? removeFavourite() : addFavourite())}
               />
             </ButtonWrapper>
