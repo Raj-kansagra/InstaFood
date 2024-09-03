@@ -6,6 +6,7 @@ import { addToCart, deleteFromCart, getCart, placeOrder } from "../api";
 import { CircularProgress } from "@mui/material";
 import { DeleteOutline } from "@mui/icons-material";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   padding: 20px 30px;
@@ -150,9 +151,10 @@ const Delivery = styled.div`
 `;
 
 const Cart = ({setOpenAuth}) => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [reload, setReload] = useState(false);
   const [products, setProducts] = useState([]);
+  const [quantities, setQuantities] = useState({});
   const [buttonLoad, setButtonLoad] = useState(false);
   const [deliveryDetails, setDeliveryDetails] = useState({
     firstName: "",
@@ -167,41 +169,83 @@ const Cart = ({setOpenAuth}) => {
     const token = localStorage.getItem("app-token");
     await getCart(token).then((res) => {
       setProducts(res.data);
+      const initialQuantities = res.data.reduce((acc, item) => {
+        acc[item.product._id] = item.quantity;
+        return acc;
+      }, {});
+      setQuantities(initialQuantities);
       setLoading(false);
     });
   };
 
   const calculateSubtotal = () => {
     return products.reduce(
-      (total, item) => total + item.quantity * item?.product?.price?.org,
+      (total, item) => total + quantities[item.product._id] * item.product.price.org,
       0
     );
   };
+
+  const handleQuantityChange = async (id, increment) => {
+    const token = localStorage.getItem("app-token");
+    if (!token) {
+      setOpenAuth(true);
+      return;
+    }
+  
+    const newQuantity = quantities[id] + increment;
+    if (newQuantity < 0) return;
+  
+    setQuantities({ ...quantities, [id]: newQuantity });
+  
+    try {
+      if (increment > 0) {
+        await addToCart(token, { productId: id, quantity: 1 });
+      } else {
+        const type = newQuantity === 0 ? "full" : null;
+        await deleteFromCart(token, { productId: id, quantity: type ? null : 1 });
+  
+        if (newQuantity === 0) {
+          // Remove the product from the products state if quantity is 0
+          setProducts(products.filter((item) => item.product._id !== id));
+          const { [id]: _, ...remainingQuantities } = quantities;
+          setQuantities(remainingQuantities);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      // Revert the quantity in case of error
+      setQuantities({ ...quantities, [id]: quantities[id] - increment });
+    }
+  };
+
+  useEffect(() => {
+    getProducts();
+  }, []);
+
   const convertAddressToString = (addressObj) => {
-    // Convert the address object to a string representation
     return `${addressObj.firstName} ${addressObj.lastName}, ${addressObj.completeAddress}, ${addressObj.phoneNumber}, ${addressObj.emailAddress}`;
   };
 
   const PlaceOrder = async () => {
     setButtonLoad(true);
     try {
-      const isDeliveryDetailsFilled =
-        deliveryDetails.firstName &&
-        deliveryDetails.lastName &&
-        deliveryDetails.completeAddress &&
-        deliveryDetails.phoneNumber &&
-        deliveryDetails.emailAddress;
+      const isDeliveryDetailsFilled = Object.values(deliveryDetails).every(
+        (detail) => detail
+      );
 
       if (!isDeliveryDetailsFilled) {
         toast.error("Invalid Details");
+        setButtonLoad(false);
         return;
       }
 
       const token = localStorage.getItem("app-token");
-      if(!token){
-      setOpenAuth(true);
-      return;
-    } 
+      if (!token) {
+        setOpenAuth(true);
+        setButtonLoad(false);
+        return;
+      }
+
       const totalAmount = calculateSubtotal().toFixed(2);
       const orderDetails = {
         products,
@@ -209,60 +253,18 @@ const Cart = ({setOpenAuth}) => {
         totalAmount,
       };
 
-      await placeOrder(token, orderDetails)
-      .then(()=>{
-        toast.success("Order placed");
-      })
-      setButtonLoad(false);
-      // Clear the cart and update the UI
-      setReload(!reload);
+      await placeOrder(token, orderDetails);
+      toast.success("Order placed");
+      // Optionally, you can clear the cart state here
+      setQuantities({});
+      navigate("/");
     } catch (err) {
-      setButtonLoad(false);
-    } finally{
+      console.log(err);
+    } finally {
       setButtonLoad(false);
     }
   };
 
-  useEffect(() => {
-    getProducts();
-  }, [reload]);
-
-  const addCart = async (id) => {
-    const token = localStorage.getItem("app-token");
-    if(!token){
-      setOpenAuth(true);
-      return;
-    } 
-    await addToCart(token, { productId: id, quantity: 1 })
-      .then((res) => {
-        setReload(!reload);
-      })
-      .catch((err) => {
-        console.log(err);
-        setReload(!reload);
-      });
-  };
-
-  const removeCart = async (id, quantity, type) => {
-    const token = localStorage.getItem("app-token");
-    if(!token){
-      setOpenAuth(true);
-      return;
-    } 
-    let qnt = quantity > 0 ? 1 : null;
-    if (type === "full") qnt = null;
-    await deleteFromCart(token, {
-      productId: id,
-      quantity: qnt,
-    })
-      .then((res) => {
-        setReload(!reload);
-      })
-      .catch((err) => {
-        setReload(!reload);
-        console.log(err);
-      });
-  };
   return (
     <Container>
       <Section>
@@ -300,23 +302,15 @@ const Cart = ({setOpenAuth}) => {
                       <TableItem>
                         <Counter>
                           <div
-                            style={{
-                              cursor: "pointer",
-                              flex: 1,
-                            }}
-                            onClick={() =>
-                              removeCart(item?.product?._id, item?.quantity - 1)
-                            }
+                            style={{ cursor: "pointer", flex: 1 }}
+                            onClick={() => handleQuantityChange(item.product._id, -1)}
                           >
                             -
                           </div>
-                          {item?.quantity}{" "}
+                          {quantities[item.product._id]}{" "}
                           <div
-                            style={{
-                              cursor: "pointer",
-                              flex: 1,
-                            }}
-                            onClick={() => addCart(item?.product?._id)}
+                            style={{ cursor: "pointer", flex: 1 }}
+                            onClick={() => handleQuantityChange(item.product._id, 1)}
                           >
                             +
                           </div>
@@ -329,14 +323,8 @@ const Cart = ({setOpenAuth}) => {
                       </TableItem>
                       <TableItem>
                         <DeleteOutline
-                          sx={{ color: "red" ,cursor: "pointer"}}
-                          onClick={() =>
-                            removeCart(
-                              item?.product?._id,
-                              item?.quantity - 1,
-                              "full"
-                            )
-                          }
+                          sx={{ color: "red", cursor: "pointer" }}
+                          onClick={() => handleQuantityChange(item.product._id, -quantities[item.product._id])}
                         />
                       </TableItem>
                     </Table>
