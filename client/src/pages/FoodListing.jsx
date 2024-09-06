@@ -46,7 +46,7 @@ const Filters = styled.div`
   padding: 20px 16px;
   flex: 1;
   width: 100%;
-  max-width: 300px;
+  max-width: 310px;
   @media (max-width: 700px) {
   }
 `;
@@ -115,28 +115,43 @@ const Selectableitem = styled.div`
 const FoodListing = () => {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 1000]); // Default price range
-  const [selectedCategories, setSelectedCategories] = useState([]); // Default selected categories
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000);
 
-  const getFilteredProductsData = async () => {
-    setLoading(true);
-    // Call the API function for filtered products
-    await getAllProducts(
-      selectedCategories.length > 0
-        ? `minPrice=${priceRange[0]}&maxPrice=${
-            priceRange[1]
-          }&categories=${selectedCategories.join(",")}`
-        : `minPrice=${priceRange[0]}&maxPrice=${priceRange[1]}`
-    ).then((res) => {
-      setProducts(res.data);
+  // Simulate fetching products from the backend
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      // Replace this with your actual API call
+      const response = await getAllProducts('minPrice=0&maxPrice=1000'); // Adjust the function to fetch all products
+      setProducts(response.data);
+      setFilteredProducts(response.data); // Initially set filtered products to all products
       setLoading(false);
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Local filter function
+  const filterProducts = () => {
+    const filtered = products.filter(product => {
+      // Assuming you want to filter by the original price (`org`)
+      const withinPriceRange = product.price.org >= priceRange[0] && product.price.org <= priceRange[1];
+      
+      // Check if product's category array has at least one selected category
+      const inSelectedCategories = selectedCategories.length === 0 || 
+        selectedCategories.some(cat => product.category.includes(cat));
+  
+      return withinPriceRange && inSelectedCategories;
     });
+    setFilteredProducts(filtered);
   };
 
   useEffect(() => {
-    getFilteredProductsData();
+    filterProducts();
   }, [priceRange, selectedCategories]);
 
   const handleSavePriceRange = () => {
@@ -182,7 +197,7 @@ const FoodListing = () => {
                       onChange={handleMax}
                     />
                   </div>
-                  <Button text="Save" small  onClick={handleSavePriceRange}/>
+                  <Button text="Save" small onClick={handleSavePriceRange} />
                 </>
               ) : filters.value === "category" ? (
                 <Item>
@@ -215,7 +230,7 @@ const FoodListing = () => {
             <CircularProgress />
           ) : (
             <>
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
             </>
