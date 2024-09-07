@@ -1,5 +1,7 @@
 # InstaFood - Food Delivery App
 
+[**Live Demo**](https://instafood-self.vercel.app)
+
 InstaFood is a full-stack web application designed to simplify food ordering and delivery. The app includes user authentication, cart management, order tracking, and responsive design to provide users with a seamless experience. Built using the MERN stack (MongoDB, Express.js, React, Node.js).
 
 ## Features
