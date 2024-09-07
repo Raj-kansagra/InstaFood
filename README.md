@@ -50,8 +50,8 @@ InstaFood is a full-stack web application designed to simplify food ordering and
 3. Create a .env file in the server directory and add the following environment variables:
 
    ```javascript
-   MONGO_URI=<your-mongodb-atlas-connection-string>
-   JWT_SECRET=<your-jwt-secret>
+   MONGODB_URL=your-mongodb-atlas-connection-string
+   JWT=your-jwt-secret
 
 4. Update API base URL:
 
