@@ -1,4 +1,4 @@
-import bcrypt, { compareSync } from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { createError } from "../error.js";

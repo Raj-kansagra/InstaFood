@@ -34,7 +34,7 @@ app.get("/", async (req, res) => {
 const connectDB = () => {
   mongoose.set("strictQuery", true);
   mongoose
-    .connect(`mongodb://raj:${process.env.MONGODB_PASSWORD}@ac-evc4bnj-shard-00-00.pqanubd.mongodb.net:27017,ac-evc4bnj-shard-00-01.pqanubd.mongodb.net:27017,ac-evc4bnj-shard-00-02.pqanubd.mongodb.net:27017/?ssl=true&replicaSet=atlas-aht57g-shard-0&authSource=admin&retryWrites=true&w=majority`)
+    .connect(process.env.MONGODB_URL)
     .then(() => console.log("Connected to Mongo DB"))
     .catch((err) => {
       console.error("failed to connect with mongo");
